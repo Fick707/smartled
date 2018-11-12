@@ -15,7 +15,7 @@
 #include "mqttbase.c"
 #include "fickmqtt.h"
 #include "smartledcore.h"
-#include "data/linkkitld_tsl.data"
+#include "data/linkkitadv_tsl.data"
 
 #define PRODUCT_KEY      "a114OCxmeCB"
 #define PRODUCT_SECRET   "IlCe3woQ5eNbkqP1"

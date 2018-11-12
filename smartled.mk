@@ -5,14 +5,13 @@ $(NAME)_SOURCES += src/fickwifi.c
 # mqtt 基础实现
 $(NAME)_SOURCES += src/mqttbase.c
 
-# mqtt的实现可选以下几种linkkit(阿里物联网平台)，ld(阿里link developer)，OneNET
+# mqtt的实现可选以下几种linkkit(阿里物联网平台)，linkkit ld(阿里link developer)，OneNET
 # 物联网平台高级版实现
 # $(NAME)_SOURCES += src/linkkitadv.c
 # 物联网平台基础版实现
 # $(NAME)_SOURCES += src/linkkitcom.c
-
 # link developer实现
-$(NAME)_SOURCES += src/ld.c
+$(NAME)_SOURCES += src/linkkitld.c
 
 # OneNET实现
 #$(NAME)_SOURCES += src/onenet.c
