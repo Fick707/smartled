@@ -1,3 +1,6 @@
+/*
+ * 物联网平台高级版实现
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -13,22 +16,12 @@
 #include "fickmqtt.h"
 #include "smartledcore.h"
 
-#define WIFI_BLINK_GPIO 15
+#include "mqttbase.c"
 
 #define PRODUCT_KEY      "a1aSJXPGyxK"
 #define PRODUCT_SECRET   "IlCe3woQ5eNbkqP1"
 #define DEVICE_NAME      "smartled-esp32"
 #define DEVICE_SECRET    "cYOR546dFNxzeAsblYqtwf0MtXaj6shn"
-
-
-#define USER_EXAMPLE_YIELD_TIMEOUT_MS (200)
-
-#define EXAMPLE_TRACE(...)                               \
-    do {                                                     \
-        HAL_Printf("\033[1;31;40m%s.%d: ", __func__, __LINE__);  \
-        HAL_Printf(__VA_ARGS__);                                 \
-        HAL_Printf("\033[0m\r\n");                                   \
-    } while (0)
 
 typedef struct {
     int master_devid;
@@ -43,12 +36,12 @@ static user_example_ctx_t *user_example_get_ctx(void)
     return &g_user_example_ctx;
 }
 
-void* example_malloc(size_t size)
+void* fick_malloc(size_t size)
 {
     return HAL_Malloc(size);
 }
 
-void example_free(void *ptr)
+void fick_free(void *ptr)
 {
     HAL_Free(ptr);
 }
@@ -438,63 +431,23 @@ static int user_master_dev_available(void)
     return 0;
 }
 
-
-static int mqtt_status = 0;
-gpio_dev_t mqtt_led;
 /*
  * fick mqtt impl, ali linkkit
  */
 
 void set_iotx_info()
 {
-    LOG("set iotx info %s,%s.",PRODUCT_KEY,DEVICE_NAME);
+    EXAMPLE_TRACE("set iotx info %s,%s.",PRODUCT_KEY,DEVICE_NAME);
     HAL_SetProductKey(PRODUCT_KEY);
     HAL_SetProductSecret(PRODUCT_SECRET);
     HAL_SetDeviceName(DEVICE_NAME);
     HAL_SetDeviceSecret(DEVICE_SECRET);
 }
 
-int get_mqtt_status(void)
-{
-    return mqtt_status;
-}
-
-/*
- * mqtt led blink task
- */
-static void mqtt_led_blink(void *p)
-{
-    switch (mqtt_status) {
-    		case 1 : {
-                /* MQTT Blink off (output low) */
-    			hal_gpio_output_high(&mqtt_led);
-    			break;
-    		}
-    		case 0 :
-    		default : {
-    			/* MQTT Blink on (output high) */
-				hal_gpio_output_low(&mqtt_led);
-    			break;
-    		}
-    	}
-    aos_post_delayed_action(3000, mqtt_led_blink, NULL);
-}
-
-void mqtt_init(void)
-{
-    set_iotx_info();
-    LOG("init mqtt led blink.");
-    /* gpio port config */
-    mqtt_led.port = WIFI_BLINK_GPIO;
-    /* set as output mode */
-    mqtt_led.config = OUTPUT_PUSH_PULL;
-    /* configure GPIO with the given settings */
-    hal_gpio_init(&mqtt_led);
-    aos_post_delayed_action(3000, mqtt_led_blink, NULL);
-}
 
 int mqtt_main(void *paras)
 {
+    set_iotx_info();
     int res = 0;
     uint64_t time_prev_sec = 0, time_now_sec = 0;
     user_example_ctx_t *user_example_ctx = user_example_get_ctx();
@@ -504,8 +457,8 @@ int mqtt_main(void *paras)
 
     /* Init cJSON Hooks */
     cJSON_Hooks cjson_hooks;
-    cjson_hooks.malloc_fn = example_malloc;
-    cjson_hooks.free_fn = example_free;
+    cjson_hooks.malloc_fn = fick_malloc;
+    cjson_hooks.free_fn = fick_free;
     cJSON_InitHooks(&cjson_hooks);
 
     IOT_OpenLog("iot_linkkit");
@@ -548,6 +501,6 @@ int mqtt_main(void *paras)
         return -1;
     }
     EXAMPLE_TRACE("IOT linkkit connected.");
-    mqtt_status = 1;
+    set_mqtt_status(1);
     return 0;
 }

@@ -38,6 +38,8 @@ void wifi_service_event(input_event_t *event, void *priv_data)
         default : {
             LOG("wifi disconnect with something wrong,%d.",event -> value);
             wifi_status = 0;
+            // set mqtt status to 0
+            set_mqtt_status(0);
             // stop mqtt task or handler wifi disconnect event in mqtt task impl;
             break;
         }

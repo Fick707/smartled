@@ -1,12 +1,17 @@
 #pragma once
 
 /*
+ * set mqtt stauts
+ */
+void set_mqtt_status(int status);
+
+/*
  * get current mqtt staus;
  */
 int get_mqtt_status(void);
 
 /*
- * init wifi netmgr 
+ * init mqtt task 
  */
 void mqtt_init(void);
 
