@@ -24,7 +24,7 @@
 #define DEVICE_NAME "19I6XgxeRwW69MQBTUu4"
 #define DEVICE_SECRET "hPaNSOg27jT5MHlDW3LV2ETkBHGHfxTV"
 
-#define USER_EXAMPLE_YIELD_TIMEOUT_MS (2000)
+#define USER_EXAMPLE_YIELD_TIMEOUT_MS (500)
 
 typedef struct
 {
@@ -555,12 +555,12 @@ int mqtt_main(void *paras)
     {
         IOT_Linkkit_Yield(USER_EXAMPLE_YIELD_TIMEOUT_MS);
 
-        time_now_sec = user_update_sec();
-        if (time_prev_sec == time_now_sec)
-        {
-            continue;
-        }
-        time_prev_sec = time_now_sec;
+        // time_now_sec = user_update_sec();
+        // if (time_prev_sec == time_now_sec)
+        // {
+        //     continue;
+        // }
+        // time_prev_sec = time_now_sec;
     }
 
     IOT_Linkkit_Close(user_example_ctx->master_devid);
