@@ -550,6 +550,7 @@ int mqtt_main(void *paras)
         EXAMPLE_TRACE("IOT_Linkkit_Connect Failed\n");
         return -1;
     }
+    linkkit_set_tsl(TSL_STRING, strlen(TSL_STRING));
     while (1)
     {
         IOT_Linkkit_Yield(USER_EXAMPLE_YIELD_TIMEOUT_MS);
