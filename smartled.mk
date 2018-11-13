@@ -2,6 +2,7 @@ NAME := smartled
 $(NAME)_SOURCES := smartled.c
 $(NAME)_SOURCES += src/systools.c
 $(NAME)_SOURCES += src/fickwifi.c
+$(NAME)_SOURCES += src/smartledcore.c
 # mqtt 基础实现
 $(NAME)_SOURCES += src/mqttbase.c
 

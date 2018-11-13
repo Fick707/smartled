@@ -15,7 +15,6 @@
 
 #include "fickmqtt.h"
 #include "smartledcore.h"
-
 #include "mqttbase.c"
 
 #include "../data/linkkitld_tsl.data"
@@ -25,6 +24,8 @@
 #define DEVICE_SECRET "hPaNSOg27jT5MHlDW3LV2ETkBHGHfxTV"
 
 #define USER_EXAMPLE_YIELD_TIMEOUT_MS (500)
+
+#define PROP_SET_FORMAT_CMDLED       "\"cmd_led\":"
 
 typedef struct
 {
@@ -189,6 +190,19 @@ static int user_property_set_event_handler(const int devid, const char *request,
     int res = 0;
     user_example_ctx_t *user_example_ctx = user_example_get_ctx();
     EXAMPLE_TRACE("Property Set Received, Devid: %d, Request: %s,Request len: %d.", devid, request, request_len);
+    char *p_serch = NULL;
+    uint8_t led_cmd = 0;
+    p_serch = strstr(request, PROP_SET_FORMAT_CMDLED);
+    if (p_serch != NULL) {
+      led_cmd = *(p_serch + strlen(PROP_SET_FORMAT_CMDLED));
+      LOG("led_cmd:%d.",led_cmd);
+      if (led_cmd == '1' || led_cmd == '0')
+      {
+        switch_led(led_cmd - '0');
+      }
+    } else {
+      LOG("not led cmd!");
+	}
 
     res = IOT_Linkkit_Post(user_example_ctx->master_devid, IOTX_LINKKIT_MSG_POST_PROPERTY,
                            (unsigned char *)request, request_len);

@@ -8,6 +8,7 @@
 #include "fickwifi.h"
 #include "fickmqtt.h"
 #include "systools.h"
+#include "smartledcore.h"
 
 int application_start(int argc, char *argv[])
 {
@@ -20,6 +21,9 @@ int application_start(int argc, char *argv[])
 
     // 3. init mqtt ;
     mqtt_init();
+
+    // 4. init core;
+    core_init();
 
     // and finally,invoke aos loop run.
     aos_loop_run();
