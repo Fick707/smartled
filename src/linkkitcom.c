@@ -593,7 +593,7 @@ int trigger_deviceinfo(sample_context_t *sample)
 }
 #endif
 
-int linkkitld_main()
+int linkkitcom_main()
 {
     sample_context_t sample_ctx = {0};
     
@@ -704,7 +704,7 @@ int mqtt_main(void *paras)
      * please check document: https://help.aliyun.com/document_detail/73708.html
      *         API introduce: https://help.aliyun.com/document_detail/68687.html
      */
-    linkkitld_main();
+    linkkitcom_main();
 
     IOT_DumpMemoryStats(IOT_LOG_DEBUG);
     IOT_CloseLog();
