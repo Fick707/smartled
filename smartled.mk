@@ -1,10 +1,10 @@
 NAME := smartled
-$(NAME)_SOURCES := smartled.c
+$(NAME)_SOURCES := smartled_main.c
 $(NAME)_SOURCES += src/systools.c
-$(NAME)_SOURCES += src/fickwifi.c
-$(NAME)_SOURCES += src/smartledcore.c
+# $(NAME)_SOURCES += src/fickwifi.c
+# $(NAME)_SOURCES += src/smartledcore.c
 # mqtt 基础实现
-$(NAME)_SOURCES += src/mqttbase.c
+# $(NAME)_SOURCES += src/mqttbase.c
 
 # mqtt的实现可选以下几种linkkit(阿里物联网平台)，linkkit ld(阿里link developer)，OneNET
 # 物联网平台高级版实现
@@ -12,7 +12,7 @@ $(NAME)_SOURCES += src/mqttbase.c
 # 物联网平台基础版实现
 # $(NAME)_SOURCES += src/linkkitcom.c
 # link developer实现
-$(NAME)_SOURCES += src/linkkitld.c
+# $(NAME)_SOURCES += src/linkkitld.c
 
 # OneNET实现
 #$(NAME)_SOURCES += src/onenet.c
