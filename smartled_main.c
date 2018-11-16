@@ -8,7 +8,7 @@
 // #include "fickwifi.h"
 // #include "fickmqtt.h"
 #include "systools.h"
-#include "smartledcore.h"
+// #include "smartledcore.h"
 
 int application_start(int argc, char *argv[])
 {

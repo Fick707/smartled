@@ -12,21 +12,23 @@
 
 // master switch for all led
 int LED_FOR_ALL_STATUS = 1;
-int LED_FOR_AWSS_STATUS = 0;
-int LED_FOR_WIFI_STATUS = 0;
-int LED_FOR_MQTT_STATUS = 0;
+int LED_FOR_AWSS_STATUS = 1;
+int LED_FOR_WIFI_STATUS = 1;
+int LED_FOR_MQTT_STATUS = 1;
 
 gpio_dev_t awss_led;
 gpio_dev_t wifi_led;
 gpio_dev_t mqtt_led;
 
 void init_blinker();
-void led_blink(void *arg);
+void led_blinker(int arg);
+int get_led_status_by_code(int led_code);
+gpio_dev_t get_gpio_dev_by_code(int led_code);
+
+#ifdef CONFIG_PRINT_HEAP
 void print_heap();
 void print_heap_work();
-int get_led_status_by_code(int led_code);
-gpio_dev_t *get_gpio_dev_by_code(int led_code);
-
+#endif
 
 void init_systools()
 {
@@ -44,11 +46,27 @@ void init_systools()
     init_blinker();
 }
 
-void init_blinker(void)
+void init_blinker()
 {
-    led_blink(CODE_LED_AWSS);
-    led_blink(CODE_LED_WIFI);
-    led_blink(CODE_LED_MQTT);
+    LOG("init blinker.");
+    // init awss led device
+    awss_led.port = AWSS_LED_GPIO;
+    awss_led.config = OUTPUT_PUSH_PULL;
+    hal_gpio_init(&awss_led);
+    aos_post_delayed_action(3000, led_blinker, CODE_LED_AWSS);
+
+    // init wifi led device
+    wifi_led.port = WIFI_LED_GPIO;
+    wifi_led.config = OUTPUT_PUSH_PULL;
+    hal_gpio_init(&wifi_led);
+    aos_post_delayed_action(3000, led_blinker, CODE_LED_WIFI);
+
+    // init mqtt led device
+    mqtt_led.port = MQTT_LED_GPIO;
+    mqtt_led.config = OUTPUT_PUSH_PULL;
+    hal_gpio_init(&mqtt_led);
+    aos_post_delayed_action(3000, led_blinker, CODE_LED_MQTT);
+
 }
 
 void switch_led(int led_code,int value){
@@ -71,13 +89,13 @@ void switch_led(int led_code,int value){
     }
 }
 
-void led_blink(void *arg)
+void led_blinker(int arg)
 {
-    LOGD("led blink for %s.",arg);
     if(LED_FOR_ALL_STATUS){
-        int status = get_led_status_by_code(arg - '0');
-        LOGD("status for %s is %d.",arg,status);
-        gpio_dev_t *gpio_dev = get_gpio_dev_by_code(arg - '0');
+        int status = get_led_status_by_code(arg);
+        LOG("status for %d is %d.",arg,status);
+        gpio_dev_t gpio_dev = get_gpio_dev_by_code(arg);
+        // LOG("port:%d.",gpio_dev->port);
         switch (status) {
     		case 1 : {
     			hal_gpio_output_high(&gpio_dev);
@@ -90,7 +108,7 @@ void led_blink(void *arg)
     		}
     	}
     }
-    aos_post_delayed_action(3000, led_blink, arg);
+    aos_post_delayed_action(3000, led_blinker, arg);
 }
 
 int get_led_status_by_code(int led_code)
@@ -106,19 +124,20 @@ int get_led_status_by_code(int led_code)
     }
 }
 
-gpio_dev_t *get_gpio_dev_by_code(int led_code)
+gpio_dev_t get_gpio_dev_by_code(int led_code)
 {
     switch (led_code)
     {
         case CODE_LED_AWSS :
-            return &awss_led;
+            return awss_led;
         case CODE_LED_WIFI :
-            return &wifi_led;
+            return wifi_led;
         default:
-            return &mqtt_led;
+            return mqtt_led;
     }
 }
 
+#ifdef CONFIG_PRINT_HEAP
 void print_heap()
 {
     extern k_mm_head *g_kmm_head;
@@ -129,5 +148,6 @@ void print_heap()
 void print_heap_work(void *p)
 {
     print_heap();
-    aos_post_delayed_action(5000, print_heap_work, NULL);
+    aos_post_delayed_action(10000, print_heap_work, NULL);
 }
+#endif

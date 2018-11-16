@@ -33,13 +33,10 @@ $(NAME)_COMPONENTS += network/netmgr \
                       middleware/uagent/uota  \
                       utility/cjson   
 
+ifeq ($(printheap),1)
 $(NAME)_DEFINES += CONFIG_PRINT_HEAP
+endif
 
 ifeq ($(debug),1)
 $(NAME)_DEFINES += CONFIG_DEBUG_ENABLE
 endif
-
-# wifi led gpio
-CONFIG_WIFI_BLINK_GPIO := 2
-# linkkit led gpio
-CONFIG_LINKKIT_BLINK_GPIO := 15
