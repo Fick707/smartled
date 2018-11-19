@@ -12,9 +12,9 @@
 
 // master switch for all led
 int LED_FOR_ALL_STATUS = 1;
-int LED_FOR_AWSS_STATUS = 1;
-int LED_FOR_WIFI_STATUS = 1;
-int LED_FOR_MQTT_STATUS = 1;
+int LED_FOR_AWSS_STATUS = 0;
+int LED_FOR_WIFI_STATUS = 0;
+int LED_FOR_MQTT_STATUS = 0;
 
 gpio_dev_t awss_led;
 gpio_dev_t wifi_led;
@@ -44,6 +44,8 @@ void init_systools()
     #endif
     // init blinker
     init_blinker();
+
+    // TODO enable fota
 }
 
 void init_blinker()
@@ -53,19 +55,19 @@ void init_blinker()
     awss_led.port = AWSS_LED_GPIO;
     awss_led.config = OUTPUT_PUSH_PULL;
     hal_gpio_init(&awss_led);
-    aos_post_delayed_action(3000, led_blinker, CODE_LED_AWSS);
+    aos_post_delayed_action(1000, led_blinker, CODE_LED_AWSS);
 
     // init wifi led device
     wifi_led.port = WIFI_LED_GPIO;
     wifi_led.config = OUTPUT_PUSH_PULL;
     hal_gpio_init(&wifi_led);
-    aos_post_delayed_action(3000, led_blinker, CODE_LED_WIFI);
+    aos_post_delayed_action(1000, led_blinker, CODE_LED_WIFI);
 
     // init mqtt led device
     mqtt_led.port = MQTT_LED_GPIO;
     mqtt_led.config = OUTPUT_PUSH_PULL;
     hal_gpio_init(&mqtt_led);
-    aos_post_delayed_action(3000, led_blinker, CODE_LED_MQTT);
+    aos_post_delayed_action(1000, led_blinker, CODE_LED_MQTT);
 
 }
 
@@ -93,7 +95,7 @@ void led_blinker(int arg)
 {
     if(LED_FOR_ALL_STATUS){
         int status = get_led_status_by_code(arg);
-        LOG("status for %d is %d.",arg,status);
+        // LOG("status for %d is %d.",arg,status);
         gpio_dev_t gpio_dev = get_gpio_dev_by_code(arg);
         // LOG("port:%d.",gpio_dev->port);
         switch (status) {
@@ -108,7 +110,7 @@ void led_blinker(int arg)
     		}
     	}
     }
-    aos_post_delayed_action(3000, led_blinker, arg);
+    aos_post_delayed_action(1000, led_blinker, arg);
 }
 
 int get_led_status_by_code(int led_code)

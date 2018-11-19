@@ -10,11 +10,6 @@
 void wifi_service_event(input_event_t *event, void *priv_data);
 
 /*
- * get current wifi staus;
+ * init network for awss and wireless network
  */
-int get_wifi_status(void);
-
-/*
- * init wifi netmgr 
- */
-void wifi_netmgr_init(void);
+void network_init(void);

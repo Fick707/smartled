@@ -1,7 +1,7 @@
 NAME := smartled
 $(NAME)_SOURCES := smartled_main.c
 $(NAME)_SOURCES += src/systools.c
-# $(NAME)_SOURCES += src/fickwifi.c
+$(NAME)_SOURCES += src/network.c
 # $(NAME)_SOURCES += src/smartledcore.c
 # mqtt 基础实现
 # $(NAME)_SOURCES += src/mqttbase.c
@@ -40,3 +40,5 @@ endif
 ifeq ($(debug),1)
 $(NAME)_DEFINES += CONFIG_DEBUG_ENABLE
 endif
+
+GLOBAL_DEFINES += CONFIG_AOS_CLI

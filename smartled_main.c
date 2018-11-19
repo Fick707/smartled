@@ -5,9 +5,9 @@
 #include <aos/aos.h>
 #include <aos/yloop.h>
 
-// #include "fickwifi.h"
-// #include "fickmqtt.h"
 #include "systools.h"
+#include "network.h"
+// #include "fickmqtt.h"
 // #include "smartledcore.h"
 
 int application_start(int argc, char *argv[])
@@ -16,8 +16,8 @@ int application_start(int argc, char *argv[])
     // 1. init the system tools,start print heap task,set log level and so on.
     init_systools();
 
-    // 2. init the networkmanagment,connect wifi if connect config exist,or wait for netmgr connect commnad from cli.
-    // wifi_netmgr_init();
+    // 2. init the network awss service.
+    network_init();
 
     // 3. init mqtt ;
     // mqtt_init();
